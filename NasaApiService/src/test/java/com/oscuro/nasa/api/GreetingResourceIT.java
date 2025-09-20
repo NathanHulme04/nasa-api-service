@@ -1,4 +1,4 @@
-package com.oscuro.nasa.api.service;
+package com.oscuro.nasa.api;
 
 import io.quarkus.test.junit.QuarkusIntegrationTest;
 
