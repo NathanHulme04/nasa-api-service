@@ -2,6 +2,7 @@ package com.oscuro.nasa.api.entities;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -15,12 +16,14 @@ public class NasaApodEntity {
     public String url;
 
     @Lob
+    @Column(columnDefinition = "TEXT")
     public String explanation;
 
     public String hdurl;
     public String media_type;
     public String service_version;
-    public String date;
+    public LocalDate date;
+    @Column(columnDefinition = "TEXT")
     public String copyright;
 
     public String getTitle(){
@@ -65,10 +68,10 @@ public class NasaApodEntity {
         this.service_version = serviceVersion;
     }
 
-    public String getDate(){
+    public LocalDate getDate(){
         return this.date;
     }
-    public void setDate(String date){
+    public void setDate(LocalDate date){
         this.date = date;
     }
 
@@ -86,7 +89,7 @@ public class NasaApodEntity {
                 ", title='" + title + '\'' +
                 ", url='" + url + '\'' +
                 ", explanation='" + (explanation != null ? explanation.substring(0, Math.min(100, explanation.length())) + "..." : null) + '\'' +
-                ", date='" + date + '\'' +
+                ", date='" + date.toString() + '\'' +
                 '}';
     }
 }

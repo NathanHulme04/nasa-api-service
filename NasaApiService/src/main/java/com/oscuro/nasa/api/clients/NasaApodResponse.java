@@ -1,5 +1,7 @@
 package com.oscuro.nasa.api.clients;
 
+import java.time.LocalDate;
+
 public class NasaApodResponse {
     public String title;
     public String url;
@@ -7,6 +9,6 @@ public class NasaApodResponse {
     public String hdurl;
     public String media_type;
     public String service_version;
-    public String date;
+    public LocalDate date;
     public String copyright;
 }
