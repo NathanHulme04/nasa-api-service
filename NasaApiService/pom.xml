@@ -48,6 +48,14 @@
         </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-hibernate-orm</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-jdbc-postgresql</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.quarkus</groupId>
             <artifactId>quarkus-junit5</artifactId>
             <scope>test</scope>
         </dependency>
@@ -64,6 +72,11 @@
             <groupId>org.eclipse.aether</groupId>
             <artifactId>aether-spi</artifactId>
             <version>1.0.0.v20140518</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.cloud.sql</groupId>
+            <artifactId>postgres-socket-factory</artifactId>
+            <version>1.15.1</version>
         </dependency>
     </dependencies>
 
