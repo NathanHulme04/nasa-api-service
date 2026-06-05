@@ -28,8 +28,8 @@ public class NasaApodResource {
     @Path("search")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getApod(
-            @QueryParam("fromDate") String fromDate,
-            @QueryParam("toDate") String toDate,
+            @QueryParam("startDate") String fromDate,
+            @QueryParam("endDate") String toDate,
             @QueryParam("sortBy") String sortBy,
             @QueryParam("sortOrder") String sortOrder,
             @QueryParam("page") String page,

@@ -1,6 +1,7 @@
 package com.oscuro.nasa.api.repositories;
 
 import com.oscuro.nasa.api.entities.NasaApodEntity;
+import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -41,7 +42,18 @@ public class NasaApodRepository {
 
         if (Objects.nonNull(searchString) && !searchString.isBlank()) {
             // Postgres Full-Text Search syntax for prefix matching (e.g. 'mar:*')
-            q.append(" AND to_tsvector('english', p.title || ' ' || p.explanation) @@ to_tsquery('english', :search)");
+            //q.append(" AND to_tsvector('english', p.title || ' ' || p.explanation) @@ to_tsquery('english', :search)");
+
+            // plainto_tsquery handles spaces and converts "mars rover" into "mars & rover" automatically
+            //q.append(" AND to_tsvector('english', REGEXP_REPLACE(COALESCE(p.title, '') || ' ' || COALESCE(p.explanation, ''), '\\s+', ' ', 'g')) @@ plainto_tsquery('english', :search)");
+
+            // 1. Convert COALESCE text to a string
+            // 2. REGEXP_REPLACE looking for both normal whitespace (\s) AND explicitly hex code non-breaking spaces (\x00a0)
+            //q.append(" AND to_tsvector('english', REGEXP_REPLACE(COALESCE(p.title, '') || ' ' || COALESCE(p.explanation, ''), '[\\s\\x00a0]+', ' ', 'g')) @@ plainto_tsquery('english', :search)");
+
+            // Using Postgres case-insensitive regex match (~*) to find the word safely
+            // This avoids all the tsvector/tsquery mapping errors completely
+            q.append(" AND (p.title ~* :search OR p.explanation ~* :search)");
         }
 
         // 2. SAFE Dynamic Sorting (Whitelisting)
@@ -62,9 +74,16 @@ public class NasaApodRepository {
             // Prepare the string for to_tsquery.
             // We trim, replace spaces with ':* & ' and add ':*' at the end to make it a prefix search.
             // Example: "mars rover" becomes "mars:* & rover:*"
+            /*
             String formattedSearch = searchString.trim()
                     .replaceAll("\\s+", ":* & ") + ":*";
             query.setParameter("search", formattedSearch);
+             */
+            //query.setParameter("search", searchString.trim());
+
+            // Enforce a strict word boundary search or simple containment pattern
+            // This ensures searching for "tidal" matches "tidal" cleanly anywhere in the text
+            query.setParameter("search", searchString.trim());
         }
 
         // 4. Pagination
